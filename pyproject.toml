@@ -1,0 +1,12 @@
+[project]
+name = "data-agent"
+version = "0.1.0"
+dependencies = [
+    "google-adk==1.14.1",
+    "python-dotenv==1.1.1",
+    "pydantic==2.11.9",
+    "sqlalchemy==2.0.43",
+    "pyodbc==5.2.0",
+    "quickchart-io==2.0.0",
+    "google-genai==1.38.0"
+]
