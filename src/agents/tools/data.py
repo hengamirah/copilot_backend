@@ -22,6 +22,8 @@ class DatabaseTool:
         Returns:
             A ResponseDTO containing either successful QueryResultDTO or error information.
         """
+        print("Executing query:", query)
+        print("Parameters:", parameters or "None")
         request = DatabaseQueryRequestDTO(query=query, parameters=parameters)
         return self.service.execute_query(request)
 

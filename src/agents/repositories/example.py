@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from src.agents.dto.internal.example import ExampleQueryRequestDTO, ExampleQueryResultDTO
-from typing import Dict, Any
+from typing import Dict, Any, List
 from src.agents.utils.utils import list_json_files_pathlib, parse_json_file_to_dict
 from src.core.errors import ExampleRepositoryError
 
@@ -19,7 +19,7 @@ class VectorDatabaseRepository:
     # def save_example_data(self, data) -> str:
     #     pass 
 
-    def get_example_data(self, request: str) -> Dict[str, Any]:
+    def get_example_data(self, request: str) -> List[Dict[str, Any]]:
         # Add service-level validation if needed
         try:
             all_configs: Dict[str, Dict[str, Any]] = self._process_all_configs()

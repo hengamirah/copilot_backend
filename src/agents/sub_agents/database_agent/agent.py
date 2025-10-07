@@ -2,7 +2,8 @@ from google.adk.agents import LlmAgent
 from typing import Optional
 import src.core.config as C
 from src.core.interface import DatabaseToolProtocol
-from src.agents.repositories.example import VectorDatabaseRepository
+# from src.agents.repositories.example import VectorDatabaseRepository
+from src.agents.tools.examples import ExampleTool
 
 class DatabaseAgentManager:
     """
@@ -16,6 +17,7 @@ class DatabaseAgentManager:
             database_tool: An instance implementing DatabaseToolProtocol
         """
         self.database_tool = database_tool
+        self.example_tool = ExampleTool()
         self._agent: Optional[LlmAgent] = None
     
     @property
@@ -61,10 +63,8 @@ class DatabaseAgentManager:
                 
                 If you encounter errors, explain them clearly and suggest alternatives when possible.
 
-                Example:
-                {VectorDatabaseRepository().get_example_data("Testing")}
                 """,
-            tools=[self.database_tool.execute_query],
+            tools=[self.database_tool.execute_query, self.example_tool.get_example_data],
         )
     
 #can you compare energy consumption of Production Line 1 and Production Line 2
