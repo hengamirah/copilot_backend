@@ -1,0 +1,86 @@
+# Data Agent
+
+## Project Overview
+
+This repository contains a data agent project, designed for processing and analyzing data, potentially related to energy consumption. While a detailed description was not provided, the structure and files suggest capabilities for data extraction, analysis, and visualization.
+
+## Key Features & Benefits
+
+*   **Data Processing:** Handles binary data files (e.g., `data_level0.bin`, `header.bin`, `length.bin`, `link_lists.bin`).
+*   **Data Storage:** Utilizes `chroma.sqlite3` for persistent data storage, likely leveraging a vector database.
+*   **Data Analysis:** Implements data analysis functionalities using Python.
+*   **Data Visualization:** Generates HTML-based charts for visualizing data insights (see `local_charts/`).
+
+## Prerequisites & Dependencies
+
+Before setting up the project, ensure you have the following installed:
+
+*   **Python:** Version 3.10 or higher.
+*   **pip:** Python package installer.
+
+The project likely depends on several Python libraries, which can be installed after cloning the repository. A `pyproject.toml` file is provided, which often implies the use of `poetry` or a similar dependency management tool. Key dependencies may include (but are not limited to):
+
+*   `chromadb`
+*   `pandas`
+*   `matplotlib` or `plotly`
+*   `vanna`
+*   Other libraries used for data processing, numerical computation, and visualization.
+
+* **env** To be created inside src/core 
+ 
+## Installation & Setup Instructions
+
+1.  **Clone the Repository:**
+
+    ```bash
+    git clone https://github.com/limwei97/data_agent.git
+    cd data_agent
+    ```
+
+2.  **Install Dependencies:**
+
+    If a `requirements.txt` file is present, use:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    If using `poetry` (check `pyproject.toml` for `poetry` configuration):
+
+    ```bash
+    poetry install
+    ```
+
+    If using `uv`:
+
+    ```bash
+    uv sync
+    ```
+
+    If not using a dependency manager and no `requirements.txt` is provided, install libraries manually as you encounter `ImportError`s during runtime, referring to the import statements in the Python files to identify which libraries are needed.
+
+3.  **Environment Setup (if applicable):**
+
+    *   If the project relies on any environment variables, set them accordingly (refer to any documentation or configuration files) as per .env.development
+
+4. **Run the Data Agent**:
+
+   Run adk web
+   Instructions will depend on the specific application that uses the data agent. Inspect the source code within the `src/` directory to understand how to execute the main application.
+
+## Usage Examples & API Documentation
+
+To view the generated charts, simply open the HTML files in a web browser (e.g., `local_charts/average_energy_consumption_comparison.html`).
+
+## Configuration Options
+
+Configuration options depend on the specific functionalities implemented within the source code. Examine the Python scripts (`src/`) for any configurable parameters or settings.
+The `app.log` file suggests the use of logging; configuration for logging may be available.
+
+## License Information
+
+License information is not specified. Further investigation may be required to determine the appropriate licensing terms.
+
+## Acknowledgments
+
+N/A

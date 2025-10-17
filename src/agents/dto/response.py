@@ -10,13 +10,23 @@ class ResponseStatus(str, Enum):
     ERROR = "error"
 
 class ErrorType(str, Enum):
-    DATABASE_ERROR = "database_error"
+    DATABASE_SERVICE_ERROR = "database_service_error"
+    DATABASE_REPOSITORY_ERROR = "database_repository_error"
     VALIDATION_ERROR = "validation_error"
+    REPORTING_SERVICE_ERROR = "reporting_service_error"
+    REPORTING_REPOSITORY_ERROR = "reporting_repository_error"
+    COMMUNICATION_SERVICE_ERROR = "communication_service_error"
+    COMMUNICATION_REPOSITORY_ERROR = "communication_repository_error"
+    STATE_VALIDATION_ERROR = "state_validation_error"
+    DATABASE_ERROR = "database_error"
+    RUNTIME_ERROR = "runtime_error"
+    API_ERROR = "api_error"
+    NETWORK_ERROR = "network_error"
+    UNKNOWN_ERROR = "unknown_error"
     NOT_FOUND = "not_found"
     UNAUTHORIZED = "unauthorized"
     INTERNAL_ERROR = "internal_error"
     EXAMPLE_ERROR = "example_error"
-
 
 class ErrorDTO(BaseModel):
     type: ErrorType

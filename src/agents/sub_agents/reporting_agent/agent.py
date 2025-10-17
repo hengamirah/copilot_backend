@@ -4,14 +4,15 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 import json
 import src.core.config as C
+from src.core.interface import ReportingToolProtocol
 
-from src.agents.tools.reporting import ReportingTool, ReportData, SqlQueryResult, VisualizationData
+# from src.agents.tools.reporting import ReportingTool, #ReportData, SqlQueryResult, VisualizationData
 
 class ReportingAgentManager:
     """
     Manages the reporting agent instance and provides a clean interface for report generation.
     """
-    def __init__(self, reporting_tool):
+    def __init__(self, reporting_tool: ReportingToolProtocol):
         """
         Initialize the ReportingAgentManager with reporting tools.
         """
@@ -74,9 +75,8 @@ class ReportingAgentManager:
                 Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
             """,
             tools=[
-                self.reporting_tool.generate_markdown_report,
-                self.reporting_tool.create_report_from_components,
-                self.reporting_tool.analyze_sql_results
+                self.reporting_tool.analyze_results,
+                self.reporting_tool.generate_report,
             ],
         )
     

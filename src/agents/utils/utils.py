@@ -3,24 +3,29 @@ import functools
 import traceback
 import uuid
 import json
-import os
 from pathlib import Path
 
 from src.agents.dto import (
     ErrorDTO,
     ResponseDTO,
+    ResponseStatus,
+    ErrorType
 )
 
 from src.core import (
-    SearchServiceError, 
-    SearchFormattingError, 
     StateValidationError,
-    RuleServiceError,
-    LLMResponseError,
-    SearchRepositoryError,
-    RuleRepositoryError,
-    SessionServiceError,
-    ValidationOrchestrationServiceError,
+    DataAgentServiceError,
+    DataAgentRepositoryError,
+
+    ReportingServiceError,
+    ReportingRepositoryError,
+
+    CommunicationServiceError,
+    CommunicationRepositoryError,
+
+    ExampleServiceError,
+    ExampleRepositoryError,
+
     logger
 )
 
@@ -51,58 +56,64 @@ def global_error_handler_controller(func: Callable) -> Callable:
             return func(*args, **kwargs)
 
         #errors for search service
-        except SearchRepositoryError as e:
-            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="SEARCH_REPOSITORY_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
-        
-        except SearchFormattingError as e:
-            logger.error(f"A formatting error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="SEARCH_FORMATTING_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+        # except SearchRepositoryError as e:
+        #     logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+        #     error_dto = ErrorDTO(code="SEARCH_REPOSITORY_ERROR", message=str(e))
+        #     return ResponseDTO[None](status="error", error=error_dto).model_dump()
 
-        except SearchServiceError as e:
-            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="SEARCH_SERVICE_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
-        
-        #errors for rule service
-        except LLMResponseError as e:
-            logger.error(f"A llm parsing error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="LLM_RESPONSE_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
-        
-        except RuleRepositoryError as e:
-            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="RULE_REPOSITORY_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+        # except SearchFormattingError as e:
+        #     logger.error(f"A formatting error occurred in {func.__name__}: {e}", exc_info=True)
+        #     error_dto = ErrorDTO(code="SEARCH_FORMATTING_ERROR", message=str(e))
+        #     return ResponseDTO[None](status="error", error=error_dto).model_dump()
 
-        except RuleServiceError as e:
-            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="RULE_SERVICE_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+        # except SearchServiceError as e:
+        #     logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+        #     error_dto = ErrorDTO(code="SEARCH_SERVICE_ERROR", message=str(e))
+        #     return ResponseDTO[None](status="error", error=error_dto).model_dump()
         
+        #errors for data agent service
+        except DataAgentRepositoryError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.DATABASE_REPOSITORY_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+
+        except DataAgentServiceError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.DATABASE_SERVICE_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+        
+        #errors for reporting service
+        except ReportingRepositoryError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.REPORTING_REPOSITORY_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+
+        except ReportingServiceError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.REPORTING_SERVICE_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+        
+        #errors for communication service
+        except CommunicationRepositoryError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.COMMUNICATION_REPOSITORY_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+
+        except CommunicationServiceError as e:
+            logger.error(f"A general error occurred in {func.__name__}: {e}", exc_info=True)
+            error_dto = ErrorDTO(code=ErrorType.COMMUNICATION_SERVICE_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
+
         #errors for state service
         except StateValidationError as e:
             logger.warning(f"State validation failed in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="VALIDATION_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+            error_dto = ErrorDTO(code=ErrorType.STATE_VALIDATION_ERROR , message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
         
-        except SessionServiceError as e:
-            logger.error(f"A session service error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="SESSION_SERVICE_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
-        
-        except ValidationOrchestrationServiceError as e:   
-            logger.error(f"A validation orchestration service error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="VALIDATION_ORCHESTRATION_SERVICE_ERROR", message=str(e))
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
-            
         except (ValueError, RuntimeError) as e:
             logger.error(f"A runtime error occurred in {func.__name__}: {e}", exc_info=True)
-            error_dto = ErrorDTO(code="RUNTIME_ERROR", message=str(e))
-            
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+            error_dto = ErrorDTO(code=ErrorType.RUNTIME_ERROR, message=str(e))
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
         
         except Exception as e:
             # A final catch-all for any other unexpected error
@@ -113,10 +124,10 @@ def global_error_handler_controller(func: Callable) -> Callable:
             logger.critical(f"An unexpected error occurred in {func.__name__}: {e}", exc_info=True)
             logger.critical(f"Unexpected error in {func.__name__} [Error ID: {error_id}]:\n{traceback_str}")
             error_dto = ErrorDTO(
-                code="INTERNAL_SERVER_ERROR", 
+                code=ErrorType.INTERNAL_ERROR, 
                 message=f"An unexpected internal error occurred {e} and error id {error_id}."
                 )
-            return ResponseDTO[None](status="error", error=error_dto).model_dump()
+            return ResponseDTO[None](status=ResponseStatus.ERROR, error=error_dto).model_dump()
 
     return wrapper
 
