@@ -3,7 +3,7 @@ import os
 from src.core.logger import logger
 
 # Load environment variables from the .env file
-load_dotenv()
+load_dotenv(r'C:\Users\Lim Fang Wei\Downloads\personal\data_agent\src\core\.env')
 
 # Access the variables
 API_KEY = os.getenv("API_KEY")
@@ -18,8 +18,6 @@ DBNAME=os.getenv("DBNAME")
 USER=os.getenv("USER")
 PASSWORD=os.getenv("PASSWORD")
 
-os.environ["GOOGLE_API_KEY"] = API_KEY 
-
 logger.info(f"Environment variables have been set.")
 logger.debug(f"API_KEY: {API_KEY}")
 logger.debug(f"COMPLEX_GEMINI_MODEL: {COMPLEX_GEMINI_MODEL}")
@@ -32,3 +30,5 @@ logger.debug(f"PORT: {PORT}")
 logger.debug(f"DBNAME: {DBNAME}")
 logger.debug(f"USER: {USER}")
 logger.debug(f"PASSWORD: {PASSWORD}")
+
+os.environ["GOOGLE_API_KEY"] = API_KEY 

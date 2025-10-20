@@ -20,13 +20,9 @@ add_adk_fastapi_endpoint(app, adk_root_agent, path="/api/agent")
 
 if __name__ == "__main__":
     import uvicorn
-    import os
     
-    port = int(os.getenv("PORT", 8000))
-    print(f"🚀 Starting server on http://localhost:{port}")
-    
-    uvicorn.run(app, host="0.0.0.0", port=port)
-
+    print(f"🚀 Starting server on http://localhost:{8000}")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 # {
 #   "threadId": "thread_123",

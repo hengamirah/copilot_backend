@@ -63,10 +63,14 @@ The project likely depends on several Python libraries, which can be installed a
 
     *   If the project relies on any environment variables, set them accordingly (refer to any documentation or configuration files) as per .env.development
 
-4. **Run the Data Agent**:
+4. **Run the Data Agent for development**:
 
-   Run adk web
+   Run `adk web` at the root directory
    Instructions will depend on the specific application that uses the data agent. Inspect the source code within the `src/` directory to understand how to execute the main application.
+
+5. **Run agent as backend for production**
+    Update `load_dotenv(r'C:\Users\Lim Fang Wei\Downloads\personal\data_agent\src\core\.env')` in the src/core/config.py file
+    Run `python -m src.backend.ag_ui.main.py` at root directory
 
 ## Usage Examples & API Documentation
 
