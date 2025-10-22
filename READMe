@@ -63,14 +63,19 @@ The project likely depends on several Python libraries, which can be installed a
 
     *   If the project relies on any environment variables, set them accordingly (refer to any documentation or configuration files) as per .env.development
 
-4. **Run the Data Agent for development**:
+4. **Train Vanna AI**:
+    Run `python -m src.agents.sub_agents.vanna_agent.training` at root directory
+    Alternatively, run the training.ipynb
+
+5. **Run the Data Agent for development**:
 
    Run `adk web` at the root directory
+   Run `adk web --session_service_uri="postgresql://<postgres_username>:<username_password>@<ip_address>:5432/<database_name>"` at root directory for persistent session data
    Instructions will depend on the specific application that uses the data agent. Inspect the source code within the `src/` directory to understand how to execute the main application.
 
-5. **Run agent as backend for production**
+6. **Run agent as backend for production**
     Update `load_dotenv(r'C:\Users\Lim Fang Wei\Downloads\personal\data_agent\src\core\.env')` in the src/core/config.py file
-    Run `python -m src.backend.ag_ui.main.py` at root directory
+    Run `python -m src.backend.ag_ui.main` at root directory
 
 ## Usage Examples & API Documentation
 

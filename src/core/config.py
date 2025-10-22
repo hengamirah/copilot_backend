@@ -6,7 +6,7 @@ from src.core.logger import logger
 load_dotenv(r'C:\Users\Lim Fang Wei\Downloads\personal\data_agent\src\core\.env')
 
 # Access the variables
-API_KEY = os.getenv("API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 COMPLEX_GEMINI_MODEL = os.getenv("COMPLEX_GEMINI_MODEL")
 SIMPLE_GEMINI_MODEL = os.getenv("SIMPLE_GEMINI_MODEL")
 APP_NAME = os.getenv("APP_NAME")
@@ -17,9 +17,9 @@ PORT=os.getenv("PORT")
 DBNAME=os.getenv("DBNAME")
 USER=os.getenv("USER")
 PASSWORD=os.getenv("PASSWORD")
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 
 logger.info(f"Environment variables have been set.")
-logger.debug(f"API_KEY: {API_KEY}")
 logger.debug(f"COMPLEX_GEMINI_MODEL: {COMPLEX_GEMINI_MODEL}")
 logger.debug(f"SIMPLE_GEMINI_MODEL: {SIMPLE_GEMINI_MODEL}")
 logger.debug(f"APP_NAME: {APP_NAME}")
@@ -29,6 +29,6 @@ logger.debug(f"HOST: {HOST}")
 logger.debug(f"PORT: {PORT}")
 logger.debug(f"DBNAME: {DBNAME}")
 logger.debug(f"USER: {USER}")
-logger.debug(f"PASSWORD: {PASSWORD}")
 
-os.environ["GOOGLE_API_KEY"] = API_KEY 
+os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY 
+os.environ["OPENAI_API_KEY"]=OPENAI_API_KEY

@@ -56,6 +56,16 @@ dataAgent.connect_to_postgres(
     port=PORT,
 )
 
+try:
+    # Use the 'run_sql' method (common in Vanna) to run a simple query
+    test_result = dataAgent.run_sql("SELECT 1")
+    if test_result is not None:
+        print("✅ Simple database connection test successful!")
+    else:
+        print("⚠️ Database connection test ran, but returned no result.")
+except Exception as e:
+    print(f"❌ Database connection test failed: {e}")
+
 vannaRepository = VannaRepository(vanna_model=dataAgent)
 vannaService = VannaService(repository=vannaRepository)
 vannaTool = VannaTool(service=vannaService)

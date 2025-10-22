@@ -1,6 +1,6 @@
 # %%
 COMPLEX_GEMINI_MODEL="gemini-2.5-flash"
-API_KEY="AIzaSyD2jIzqDOPKz9k1-zHJont3mT8skLBye3w"
+GEMINI_API_KEY="xxx"
 
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.google import GoogleGeminiChat
@@ -15,7 +15,7 @@ class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
         GoogleGeminiChat.__init__(
             self, 
             config={
-                'api_key': API_KEY, 
+                'api_key': GEMINI_API_KEY, 
                 'model_name': COMPLEX_GEMINI_MODEL
             }
         )

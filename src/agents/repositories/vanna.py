@@ -1,10 +1,11 @@
-from src.core.config import COMPLEX_GEMINI_MODEL, API_KEY
+from src.core.config import COMPLEX_GEMINI_MODEL, GEMINI_API_KEY, OPENAI_API_KEY
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.google import GoogleGeminiChat
+from vanna.openai import OpenAI_Chat
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.agents.dto.response import ResponseDTO, ErrorDTO, ErrorType
+from src.agents.dto.response import ErrorDTO, ErrorType
 
 class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
     
@@ -13,13 +14,14 @@ class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
             self, 
             config=config
         )
-        GoogleGeminiChat.__init__(
-            self, 
-            config={
-                'api_key': API_KEY, 
-                'model_name': COMPLEX_GEMINI_MODEL
-            }
-        )
+        OpenAI_Chat.__init__(self, config={'api_key': OPENAI_API_KEY, 'model_name': 'gpt-4o'})
+        # GoogleGeminiChat.__init__(
+        #     self, 
+        #     config={
+        #         'api_key': GEMINI_API_KEY, 
+        #         'model_name': COMPLEX_GEMINI_MODEL
+        #     }
+        # )
 
     #KIV custom implementation
     def generate_query_explanation(self, sql: str):

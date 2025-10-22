@@ -15,5 +15,6 @@ dependencies = [
     "chromadb==1.1.0",
     "google-generativeai==0.8.5",
     "a2a-sdk[http-server]>=0.3.0",
-    "vanna[postgres]"
+    "vanna[openai,postgres]",
+    "litellm==1.78.6",
 ]

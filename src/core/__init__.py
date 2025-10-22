@@ -31,7 +31,7 @@ from .interface import (
 )
 
 from .config import (
-    API_KEY, 
+    GEMINI_API_KEY, 
     COMPLEX_GEMINI_MODEL,
     SIMPLE_GEMINI_MODEL,
     APP_NAME,

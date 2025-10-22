@@ -1,10 +1,12 @@
 from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from typing import Optional, Dict, Any, List, Union
 from pydantic import BaseModel, Field
 from datetime import datetime
 import json
 import src.core.config as C
 from src.core.interface import ReportingToolProtocol
+from google.genai import types
 
 # from src.agents.tools.reporting import ReportingTool, #ReportData, SqlQueryResult, VisualizationData
 
@@ -28,57 +30,120 @@ class ReportingAgentManager:
             LlmAgent configured for reporting operations
         """
         if self._agent is None:
-            self._agent = self._create_agent()
+            self._agent = self._create_agent("openai")
         return self._agent
     
-    def _create_agent(self) -> LlmAgent:
+    def _create_agent(self, name) -> LlmAgent:
         """
         Creates and configures the reporting agent.
         
         Returns:
             Configured LlmAgent instance
         """
-        return LlmAgent(
-            model=C.COMPLEX_GEMINI_MODEL,
-            name="reporting_agent",
-            description="An expert agent that generates comprehensive reports combining SQL data, visualizations, and insights in markdown format.",
-            instruction="""You are a data reporting specialist that creates comprehensive, professional reports.
-            
-                Your capabilities include:
-                - Analyzing SQL query results and extracting key insights
-                - Incorporating data visualizations into reports
-                - Generating well-formatted markdown reports with proper structure
-                - Providing executive summaries and actionable recommendations
-                - Creating data tables and statistical summaries
+        if name == 'openai':
+            return LlmAgent(
+                model=LiteLlm(model="openai/gpt-4o"),
+                name="reporting_agent",
+                description="An expert agent that generates comprehensive reports combining SQL data, visualizations, and insights in markdown format.",
+                instruction="""You are a data reporting specialist that creates comprehensive, professional reports.
+                
+                    Your capabilities include:
+                    - Analyzing SQL query results and extracting key insights
+                    - Incorporating data visualizations into reports
+                    - Generating well-formatted markdown reports with proper structure
+                    - Providing executive summaries and actionable recommendations
+                    - Creating data tables and statistical summaries
 
-                When generating reports, you should:
-                1. **Structure**: Use clear headings and logical flow (Executive Summary → Data Query → Visualization → Insights → Recommendations)
-                2. **Analysis**: Extract meaningful insights from the data, not just describe what's there
-                3. **Context**: Provide business context and explain the significance of findings
-                4. **Visuals**: Properly integrate charts and graphs with descriptions
-                5. **Actionability**: Include specific, actionable recommendations based on the data
+                    When generating reports, you should:
+                    1. **Structure**: Use clear headings and logical flow (Executive Summary → Data Query → Visualization → Insights → Recommendations)
+                    2. **Analysis**: Extract meaningful insights from the data, not just describe what's there
+                    3. **Context**: Provide business context and explain the significance of findings
+                    4. **Visuals**: Properly integrate charts and graphs with descriptions
+                    5. **Actionability**: Include specific, actionable recommendations based on the data
 
-                Report Components:
-                - **Executive Summary**: High-level overview of findings and key takeaways
-                - **Data Query Section**: Show the SQL query, execution details, and sample data in tables
-                - **Visualization**: Display charts with proper descriptions and context
-                - **Key Insights**: Bullet points of important findings and patterns
-                - **Recommendations**: Specific actions based on the analysis
+                    Report Components:
+                    - **Executive Summary**: High-level overview of findings and key takeaways
+                    - **Data Query Section**: Show the SQL query, execution details, and sample data in tables
+                    - **Visualization**: Display charts with proper descriptions and context
+                    - **Key Insights**: Bullet points of important findings and patterns
+                    - **Recommendations**: Specific actions based on the analysis
 
-                Formatting Guidelines:
-                - Use markdown syntax for headers, tables, code blocks, and emphasis
-                - Include timestamps and metadata
-                - Show sample data in well-formatted tables (limit to 10 rows for readability)
-                - Embed images using markdown image syntax
-                - Use professional, clear language suitable for business stakeholders
+                    Formatting Guidelines:
+                    - Use markdown syntax for headers, tables, code blocks, and emphasis
+                    - Include timestamps and metadata
+                    - Show sample data in well-formatted tables (limit to 10 rows for readability)
+                    - Embed images using markdown image syntax
+                    - Use professional, clear language suitable for business stakeholders
 
-                Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
-            """,
-            tools=[
-                self.reporting_tool.analyze_results,
-                self.reporting_tool.generate_report,
-            ],
-        )
+                    Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
+                """,
+                generate_content_config=types.GenerateContentConfig(
+                                            temperature=1, 
+                                            max_output_tokens=250,
+                                            safety_settings=[
+                                                types.SafetySetting(
+                                                    category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                                                    threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+                                                )
+                                            ]
+                                        ),
+                tools=[
+                    self.reporting_tool.analyze_results,
+                    self.reporting_tool.generate_report,
+                ],
+            )
+        else:
+            return LlmAgent(
+                model=C.COMPLEX_GEMINI_MODEL,
+                name="reporting_agent",
+                description="An expert agent that generates comprehensive reports combining SQL data, visualizations, and insights in markdown format.",
+                instruction="""You are a data reporting specialist that creates comprehensive, professional reports.
+                
+                    Your capabilities include:
+                    - Analyzing SQL query results and extracting key insights
+                    - Incorporating data visualizations into reports
+                    - Generating well-formatted markdown reports with proper structure
+                    - Providing executive summaries and actionable recommendations
+                    - Creating data tables and statistical summaries
+
+                    When generating reports, you should:
+                    1. **Structure**: Use clear headings and logical flow (Executive Summary → Data Query → Visualization → Insights → Recommendations)
+                    2. **Analysis**: Extract meaningful insights from the data, not just describe what's there
+                    3. **Context**: Provide business context and explain the significance of findings
+                    4. **Visuals**: Properly integrate charts and graphs with descriptions
+                    5. **Actionability**: Include specific, actionable recommendations based on the data
+
+                    Report Components:
+                    - **Executive Summary**: High-level overview of findings and key takeaways
+                    - **Data Query Section**: Show the SQL query, execution details, and sample data in tables
+                    - **Visualization**: Display charts with proper descriptions and context
+                    - **Key Insights**: Bullet points of important findings and patterns
+                    - **Recommendations**: Specific actions based on the analysis
+
+                    Formatting Guidelines:
+                    - Use markdown syntax for headers, tables, code blocks, and emphasis
+                    - Include timestamps and metadata
+                    - Show sample data in well-formatted tables (limit to 10 rows for readability)
+                    - Embed images using markdown image syntax
+                    - Use professional, clear language suitable for business stakeholders
+
+                    Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
+                """,
+                generate_content_config=types.GenerateContentConfig(
+                                            temperature=1, 
+                                            max_output_tokens=250,
+                                            safety_settings=[
+                                                types.SafetySetting(
+                                                    category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                                                    threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+                                                )
+                                            ]
+                                        ),
+                tools=[
+                    self.reporting_tool.analyze_results,
+                    self.reporting_tool.generate_report,
+                ],
+            )
     
     def query(self, user_message: str) -> str:
         """
