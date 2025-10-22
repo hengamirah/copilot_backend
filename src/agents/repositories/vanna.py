@@ -7,7 +7,7 @@ from plotly.graph_objs import Figure
 
 from src.agents.dto.response import ErrorDTO, ErrorType
 
-class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
+class CustomVanna(ChromaDB_VectorStore, OpenAI_Chat): #GoogleGeminiChat):
     
     def __init__(self, config=None):
         ChromaDB_VectorStore.__init__(
