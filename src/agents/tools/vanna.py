@@ -344,6 +344,15 @@ class VannaTool:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"chart_{conv_id}_{timestamp}.html"
             
+            if filename.endswith(".html"):
+                tempfilename = filename.replace(".html", ".pdf")
+                
+            from pathlib import Path
+            output_dir = Path("charts")
+            output_dir.mkdir(exist_ok=True)
+            output_path = output_dir / tempfilename
+            fig.write_image(str(output_path))
+
             # Update artifact in conversation
             current_conv['artifact'] = filename
             
@@ -361,7 +370,8 @@ class VannaTool:
                     "filename": filename,
                     "version": version,
                     "timestamp": timestamp,
-                    "sql_used": sql
+                    "sql_used": sql,
+                    "path": output_path
                 },
                 conversation_id=conv_id
             )
