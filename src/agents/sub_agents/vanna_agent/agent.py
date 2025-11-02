@@ -34,10 +34,10 @@ class VannaDataAgentManager:
             LlmAgent configured for database operations
         """
         if self._agent is None:
-            self._agent = self._create_agent("openai")
+            self._agent = self._create_agent()
         return self._agent
     
-    def _create_agent(self, name) -> LlmAgent:
+    def _create_agent(self, name=None) -> LlmAgent:
         """
         Creates and configures the vanna agent.
         
@@ -68,8 +68,8 @@ class VannaDataAgentManager:
                     - Present numeric data in a clear, formatted way
                 """,
                 generate_content_config=types.GenerateContentConfig(
-                                            temperature=1, 
-                                            max_output_tokens=250,
+                                            temperature=0, 
+                                            max_output_tokens=1000,
                                             safety_settings=[
                                                 types.SafetySetting(
                                                     category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -103,8 +103,8 @@ class VannaDataAgentManager:
                     - Present numeric data in a clear, formatted way
                 """,
                 generate_content_config=types.GenerateContentConfig(
-                                            temperature=1, 
-                                            max_output_tokens=250,
+                                            temperature=0, 
+                                            max_output_tokens=1000,
                                             safety_settings=[
                                                 types.SafetySetting(
                                                     category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,

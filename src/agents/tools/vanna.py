@@ -152,7 +152,7 @@ class VannaTool:
         self, 
         tool_context: ToolContext, 
         question: str, 
-        allow_llm_to_see_data: bool = False
+        allow_llm_to_see_data: bool = True
     ) -> str:
         """
         Step 1: Generate SQL from question.
@@ -165,7 +165,7 @@ class VannaTool:
         # Create request DTO
         request = QueryRequestDTO(
             question=question, 
-            allow_llm_to_see_data=allow_llm_to_see_data
+            allow_llm_to_see_data=True #always true
         )
         
         # Call service
@@ -371,7 +371,7 @@ class VannaTool:
                     "version": version,
                     "timestamp": timestamp,
                     "sql_used": sql,
-                    "path": output_path
+                    "path": str(output_path)
                 },
                 conversation_id=conv_id
             )

@@ -59,6 +59,29 @@ The project likely depends on several Python libraries, which can be installed a
 
     If not using a dependency manager and no `requirements.txt` is provided, install libraries manually as you encounter `ImportError`s during runtime, referring to the import statements in the Python files to identify which libraries are needed.
 
+    - run this in postgres 
+
+    -- Create the artifacts table
+        ```sql
+        CREATE TABLE artifacts_table (
+            id SERIAL PRIMARY KEY,
+            path VARCHAR(1024) NOT NULL,
+            version INTEGER NOT NULL,
+            mime_type VARCHAR(255) NOT NULL,
+            data BYTEA NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            
+            -- Ensure unique path + version combinations
+            UNIQUE(path, version)
+        );
+
+        -- Index for fast lookups by path
+        CREATE INDEX idx_artifacts_path ON artifacts_table(path);
+
+        -- Index for listing artifacts with prefix matching
+        CREATE INDEX idx_artifacts_path_prefix ON artifacts_table(path text_pattern_ops);
+        ```
+
 3.  **Environment Setup (if applicable):**
 
     *   If the project relies on any environment variables, set them accordingly (refer to any documentation or configuration files) as per .env.development

@@ -7,21 +7,21 @@ from plotly.graph_objs import Figure
 
 from src.agents.dto.response import ErrorDTO, ErrorType
 
-class CustomVanna(ChromaDB_VectorStore, OpenAI_Chat): #GoogleGeminiChat):
+class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat): #OpenAI_Chat):
     
     def __init__(self, config=None):
         ChromaDB_VectorStore.__init__(
             self, 
             config=config
         )
-        OpenAI_Chat.__init__(self, config={'api_key': OPENAI_API_KEY, 'model_name': 'gpt-4o'})
-        # GoogleGeminiChat.__init__(
-        #     self, 
-        #     config={
-        #         'api_key': GEMINI_API_KEY, 
-        #         'model_name': COMPLEX_GEMINI_MODEL
-        #     }
-        # )
+        # OpenAI_Chat.__init__(self, config={'api_key': OPENAI_API_KEY, 'model_name': 'gpt-4o'})
+        GoogleGeminiChat.__init__(
+            self, 
+            config={
+                'api_key': GEMINI_API_KEY, 
+                'model_name': COMPLEX_GEMINI_MODEL
+            }
+        )
 
     #KIV custom implementation
     def generate_query_explanation(self, sql: str):

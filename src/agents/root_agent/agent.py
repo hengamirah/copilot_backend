@@ -12,6 +12,17 @@ from src.agents.sub_agents import (
 
 import src.core.config as C
 
+from google.adk.agents.callback_context import CallbackContext
+from google.genai import types # For types.Content
+
+def before_agent_get_user_id(callback_context: CallbackContext) -> Optional[types.Content]:
+    """
+    Logs entry and checks 'skip_llm_agent' in session state.
+    If True, returns Content to skip the agent's execution.
+    If False or not present, returns None to allow execution.
+    """
+    print("User id:", callback_context.session.user_id)
+
 class RootAgentManager:
     """
     Manages the root agent instance and provides a clean interface for root agent operations.
@@ -45,10 +56,10 @@ class RootAgentManager:
             LlmAgent configured for root agent operations
         """
         if self._agent is None:
-            self._agent = self._create_agent('openai')
+            self._agent = self._create_agent()
         return self._agent
 
-    def _create_agent(self, name) -> LlmAgent:
+    def _create_agent(self, name = None) -> LlmAgent:
         """
         Creates and configures the database agent.
         
@@ -66,6 +77,7 @@ class RootAgentManager:
                             If the user is asking questions about reporting data, delegate it to reporting agent. 
                             """,
                 sub_agents=[self.data_agent, self.reporting_agent],
+                before_agent_callback=before_agent_get_user_id
             )
         else:
             return LlmAgent(
@@ -78,4 +90,5 @@ class RootAgentManager:
                             If the user is asking questions about reporting data, delegate it to reporting agent. 
                             """,
                 sub_agents=[self.data_agent, self.reporting_agent],
+                before_agent_callback=before_agent_get_user_id
             )

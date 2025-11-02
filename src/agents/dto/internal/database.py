@@ -80,7 +80,7 @@ class DatabaseQueryRequestDTO(BaseModel):
 class QueryRequestDTO(BaseModel):
     """Request to generate and optionally execute SQL from a natural language question"""
     question: str = Field(..., min_length=1, description="Natural language question to convert to SQL")
-    allow_llm_to_see_data: bool = Field(False, description="Whether to allow LLM to see actual data results")
+    allow_llm_to_see_data: bool = Field(True, description="Whether to allow LLM to see actual data results")
     
     @field_validator('question')
     @classmethod

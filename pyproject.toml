@@ -2,13 +2,13 @@
 name = "data-agent"
 version = "0.1.0"
 dependencies = [
-    "google-adk==1.14.1",
+    "google-adk==1.16.0",
     "python-dotenv==1.1.1",
     "pydantic==2.11.9",
     "sqlalchemy==2.0.43",
     "pyodbc==5.2.0",
     "quickchart-io==2.0.0",
-    "google-genai==1.38.0",
+    "google-genai>=1.41.0",
     "ag-ui-protocol==0.1.9",
     "ag-ui-adk==0.3.1",
     "vanna==0.7.9",
@@ -17,4 +17,7 @@ dependencies = [
     "a2a-sdk[http-server]>=0.3.0",
     "vanna[openai,postgres]",
     "litellm==1.78.6",
+    "google-adk[eval]",
+    "pyjwt",
+    "asyncpg==0.30.0"
 ]

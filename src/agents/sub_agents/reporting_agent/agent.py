@@ -30,10 +30,10 @@ class ReportingAgentManager:
             LlmAgent configured for reporting operations
         """
         if self._agent is None:
-            self._agent = self._create_agent("openai")
+            self._agent = self._create_agent()
         return self._agent
     
-    def _create_agent(self, name) -> LlmAgent:
+    def _create_agent(self, name=None) -> LlmAgent:
         """
         Creates and configures the reporting agent.
         
@@ -78,8 +78,8 @@ class ReportingAgentManager:
                     Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
                 """,
                 generate_content_config=types.GenerateContentConfig(
-                                            temperature=1, 
-                                            max_output_tokens=250,
+                                            temperature=0, 
+                                            max_output_tokens=1000,
                                             safety_settings=[
                                                 types.SafetySetting(
                                                     category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -130,8 +130,8 @@ class ReportingAgentManager:
                     Always ensure reports are comprehensive yet concise, focusing on actionable insights rather than just data presentation.
                 """,
                 generate_content_config=types.GenerateContentConfig(
-                                            temperature=1, 
-                                            max_output_tokens=250,
+                                            temperature=0, 
+                                            max_output_tokens=1000,
                                             safety_settings=[
                                                 types.SafetySetting(
                                                     category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,

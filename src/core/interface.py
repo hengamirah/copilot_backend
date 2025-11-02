@@ -91,7 +91,7 @@ class VannaRepositoryProtocol(Protocol):
     """
     Protocol for a tool that manages vanna.
     """
-    def generate_sql(self, question: str, allow_llm_to_see_data: bool = False) -> str:
+    def generate_sql(self, question: str, allow_llm_to_see_data: bool = True) -> str:
         ...
 
     def run_sql(self, sql: str) -> DataFrame:
