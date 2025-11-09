@@ -1,0 +1,32 @@
+﻿tagname,description
+Cluster1.Raw_SkimMilkOutPump_PM800%,Skim milk outlet pump
+Cluster1.Raw_FullMilkOutPump_PM800%,Full milk outlet pump
+Cluster1.Raw_SkimMilkChiller_ON,Skim milk chiller
+Cluster1.Raw_FullMilkChiller_ON,Full milk chiller
+Cluster1.Mixer_RawMilk_PM800%,Raw milk pre-mixer
+Cluster1.Mixer_Mixer_PM800%,Main ingredient mixer
+Cluster1.Mixer_Agitator_%,Mixer agitator motor
+Cluster1.Mixer_SugarFeed_ON,Sugar feeding system
+Cluster1.Mixer_MaltFeed_ON,Malt feeder
+Cluster1.Mixer_StrawFeed_ON,Straw ingredient feeder
+Cluster1.PLT_LINE1_PM800%,Line 1 pasteurization unit
+Cluster1.PLT_LINE2_PM800%,Line 2 pasteurization unit
+Cluster1.Bottler_Filler_PM800%,Filling machine
+Cluster1.Bottler_Label_PM800%,Bottle labeling machine
+Cluster1.Bottler_Conveyor_PM800%,Conveyor between filler and labeler
+Cluster1.Bottler_CapConveyor_PM800%,Cap transport conveyor
+Cluster1.Bottler_Cap_PM800%,Bottle capping machine
+Cluster1.Bottler_Tank1_Agitator_PM800%,Agitator motor for Tank 1
+Cluster1.Bottler_Tank2_Agitator_PM800%,Agitator motor for Tank 2
+Cluster1.Bottler_Tank1_OutletValve,Tank 1 outlet/cleaning valve
+Cluster1.Bottler_Tank2_OutletValve,Tank 2 outlet/cleaning valve
+Cluster1.BLD_PM800%,Building electrical load
+Cluster1.BLD_LVL1_%,Building level 1 load
+Cluster1.BLD_LVL2_%,Building level 2 load
+Cluster1.Tariff,Energy tariff meter
+Cluster1.EntrySpeed,Production entry speed sensor
+Cluster1.EntryAccumulatorLength,Entry accumulator sensor
+Cluster1.CIP1_State,CIP cycle controller Line 1
+SysPerfCPUTotal,Historian server CPU performance
+SysReplicationValuesPerSecTotal,Historian replication subsystem
+SysPerfSQLServerCPU,SQL storage process metrics

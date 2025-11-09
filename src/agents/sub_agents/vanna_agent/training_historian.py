@@ -46,20 +46,20 @@ dataAgent.connect_to_postgres(
 dataAgent.train(ddl="""
                     CREATE TABLE IF NOT EXISTS public.historian
                     (
-                        "TagName" text COLLATE pg_catalog."default",
-                        "DateTime" text COLLATE pg_catalog."default",
-                        "Value" double precision,
-                        "vValue" double precision,
-                        "MinRaw" double precision,
-                        "MaxRaw" double precision,
-                        "MinEU" double precision,
-                        "MaxEU" double precision,
-                        "Unit" text COLLATE pg_catalog."default",
-                        "Quality" boolean,
-                        "QualityDetail" bigint,
-                        "QualityString" text COLLATE pg_catalog."default",
-                        "wwResolution" bigint,
-                        "StartDateTime" timestamp without time zone
+                        "tagname" text COLLATE pg_catalog."default",
+                        "datetime" text COLLATE pg_catalog."default",
+                        "value" double precision,
+                        "vvalue" double precision,
+                        "minraw" double precision,
+                        "maxraw" double precision,
+                        "mineu" double precision,
+                        "maxeu" double precision,
+                        "unit" text COLLATE pg_catalog."default",
+                        "quality" boolean,
+                        "qualitydetail" bigint,
+                        "qualitystring" text COLLATE pg_catalog."default",
+                        "wwresolution" bigint,
+                        "startdatetime" timestamp without time zone
                     )
                 """)
 
@@ -76,74 +76,74 @@ dataAgent.train(plan=plan)
 # %%
 dataAgent.train(
     question="Compare LOOP_2_SP vs LOOP_2_PV for the past 30 minutes.", 
-    sql="""Select ""StartDateTime"", ""TagName"", ""Value"" FROM public.historian WHERE ""TagName"" IN ('Cluster1.LOOP_2_SP','Cluster1.LOOP_2_PV') AND ""StartDateTime"" > now() - interval '30 minutes' ORDER BY ""StartDateTime";"""
+    sql="""Select ""startdatetime"", ""tagname"", ""value"" FROM public.historian WHERE ""tagname"" IN ('Cluster1.LOOP_2_SP','Cluster1.LOOP_2_PV') AND ""startdatetime"" > now() - interval '30 minutes' ORDER BY ""startdatetime";"""
 )
 
 # %%
 dataAgent.train(
     question="What is the total kWh consumed by mixers vs pumps this month?", 
-    sql="""SELECT CASE WHEN ""TagName"" ILIKE '%Mixer%' THEN 'Mixer' ELSE 'Pump' END AS equipment_type, SUM(""Value"") AS total_kWh FROM public.historian WHERE (""TagName"" ILIKE '%Mixer%TotkWh%' OR ""TagName"" ILIKE '%Pump%TotkWh%') AND ""StartDateTime"" >= date_trunc('month', current_date) GROUP BY equipment_type;"""
+    sql="""SELECT CASE WHEN ""tagname"" ILIKE '%Mixer%' THEN 'Mixer' ELSE 'Pump' END AS equipment_type, SUM(""value"") AS total_kWh FROM public.historian WHERE (""tagname"" ILIKE '%Mixer%TotkWh%' OR ""tagname"" ILIKE '%Pump%TotkWh%') AND ""startdatetime"" >= date_trunc('month', current_date) GROUP BY equipment_type;"""
 )
 
 # %%
 dataAgent.train(
     question="What is the entry speed and accumulator length for today's shift?", 
-    sql="""SELECT ""TagName"", AVG(""Value"") AS avg_val FROM public.historian WHERE ""TagName"" IN ('Cluster1.EntrySpeed','Cluster1.EntryAccumulatorLength') AND ""StartDateTime"" > date_trunc('day', now()) GROUP BY ""TagName"";"""
+    sql="""SELECT ""tagname"", AVG(""value"") AS avg_val FROM public.historian WHERE ""tagname"" IN ('Cluster1.EntrySpeed','Cluster1.EntryAccumulatorLength') AND ""startdatetime"" > date_trunc('day', now()) GROUP BY ""tagname"";"""
 )
 
 # %%
 dataAgent.train(
     question="Was the agitator in Tank 1 overloaded yesterday?", 
-    sql="""SELECT MAX(""Value"") AS max_power FROM public.historian WHERE ""TagName"" ILIKE '%Bottler_Tank1_Agitator%TotW1S%' AND ""StartDateTime""::date = current_date - interval '1 day';"""
+    sql="""SELECT MAX(""value"") AS max_power FROM public.historian WHERE ""tagname"" ILIKE '%Bottler_Tank1_Agitator%TotW1S%' AND ""startdatetime""::date = current_date - interval '1 day';"""
 )
 
 # %%
 dataAgent.train(
     question="Did Line 1 meet its setpoint speed yesterday?", 
-    sql="""SELECT AVG(CASE WHEN ""TagName""='Cluster1.LOOP_3_SP' THEN ""Value"" END) AS avg_sp, AVG(CASE WHEN ""TagName""='Cluster1.LOOP_3_PV' THEN ""Value"" END) AS avg_pv FROM public.historian WHERE (""TagName""='Cluster1.LOOP_3_SP' OR ""TagName""='Cluster1.LOOP_3_PV') AND ""StartDateTime""::date = current_date - interval '1 day';"""
+    sql="""SELECT AVG(CASE WHEN ""tagname""='Cluster1.LOOP_3_SP' THEN ""value"" END) AS avg_sp, AVG(CASE WHEN ""tagname""='Cluster1.LOOP_3_PV' THEN ""value"" END) AS avg_pv FROM public.historian WHERE (""tagname""='Cluster1.LOOP_3_SP' OR ""tagname""='Cluster1.LOOP_3_PV') AND ""startdatetime""::date = current_date - interval '1 day';"""
 )
 
 # %%
 dataAgent.train(
     question="How much did energy tariffs cost for Cluster1 today?", 
-    sql="""SELECT SUM(""Value"") AS tariff_cost FROM public.historian WHERE ""TagName""='Cluster1.Tariff' AND  ""StartDateTime""::date=current_date;"""
+    sql="""SELECT SUM(""value"") AS tariff_cost FROM public.historian WHERE ""tagname""='Cluster1.Tariff' AND  ""startdatetime""::date=current_date;"""
 )
 
 # %%
 dataAgent.train(
     question="Forecast total energy cost for this week.", 
-    sql="""SELECT SUM(""Value"") AS forecast_kWh FROM public.historian WHERE ""TagName"" ILIKE '%TotkWh%' AND ""StartDateTime"" > date_trunc('week', current_date);"""
+    sql="""SELECT SUM(""value"") AS forecast_kWh FROM public.historian WHERE ""tagname"" ILIKE '%TotkWh%' AND ""startdatetime"" > date_trunc('week', current_date);"""
 )
 
 # %%
 dataAgent.train(
     question="Suggest best schedule to minimize electricity tariff cost.", 
-    sql="""SELECT EXTRACT(HOUR FROM ""StartDateTime"") AS hour, AVG(""Value"") AS avg_tariff FROM public.historian WHERE""TagName""='Cluster1.Tariff' AND ""StartDateTime"" > now() - interval '7 days' GROUP BY hour ORDER BY avg_tariff;"""
+    sql="""SELECT EXTRACT(HOUR FROM ""startdatetime"") AS hour, AVG(""value"") AS avg_tariff FROM public.historian WHERE""tagname""='Cluster1.Tariff' AND ""startdatetime"" > now() - interval '7 days' GROUP BY hour ORDER BY avg_tariff;"""
 )
 
 # %%
 dataAgent.train(
     question="Show me the real kWh usage of Line 1 pasteurizer in the last 8 hours.", 
-    sql="""SELECT "StartDateTime", "Value" FROM public.historian WHERE "TagName" ILIKE '%PLT_LINE1%TotkWh%' AND "StartDateTime" > now() - interval '8 hours' ORDER BY "StartDateTime";"""
+    sql="""SELECT "startdatetime", "value" FROM public.historian WHERE "tagname" ILIKE '%PLT_LINE1%TotkWh%' AND "startdatetime" > now() - interval '8 hours' ORDER BY "startdatetime";"""
 )
 
 # %%
 dataAgent.train(
     question="What is the current power consumption of Raw Skim Milk Out Pump?", 
-    sql="""SELECT "StartDateTime", "Value" FROM public.historian WHERE "TagName" ILIKE '%Raw_SkimMilkOutPump%TotW1S%' ORDER BY "StartDateTime" DESC LIMIT 1;"""
+    sql="""SELECT "startdatetime", "value" FROM public.historian WHERE "tagname" ILIKE '%Raw_SkimMilkOutPump%TotW1S%' ORDER BY "startdatetime" DESC LIMIT 1;"""
 )
 
 # %%
 dataAgent.train(
     question="How much power is the Mixer_RawMilk consuming at this moment?", 
-    sql="""SELECT "StartDateTime", "Value" FROM public.historian WHERE "TagName" ILIKE '%Mixer_RawMilk%TotW1S%' ORDER BY "StartDateTime" DESC LIMIT 1;"""
+    sql="""SELECT "startdatetime", "value" FROM public.historian WHERE "tagname" ILIKE '%Mixer_RawMilk%TotW1S%' ORDER BY "startdatetime" DESC LIMIT 1;"""
 )
 
 
 # %%
 dataAgent.train(
     question="HWhat is the total kWh consumed by mixers vs pumps this month?", 
-    sql="""SELECT CASE WHEN 'TagName' ILIKE '%Mixer%' THEN 'Mixer' ELSE 'Pump' END AS equipment_type, SUM("Value") AS total_kWh FROM public.historian WHERE ("TagName" ILIKE '%Mixer%TotkWh%' OR "TagName" ILIKE '%Pump%TotkWh%');"""
+    sql="""SELECT CASE WHEN 'tagname' ILIKE '%Mixer%' THEN 'Mixer' ELSE 'Pump' END AS equipment_type, SUM("value") AS total_kWh FROM public.historian WHERE ("tagname" ILIKE '%Mixer%TotkWh%' OR "tagname" ILIKE '%Pump%TotkWh%');"""
 )
 
 
@@ -206,13 +206,13 @@ dataAgent.train(
 dataAgent.train(
     question="Show trend of energy consumption vs production output over last 30 days.", 
     sql="""SELECT 
-            "StartDateTime"::date AS day, 
-            SUM("Value") AS total_kWh, 
+            "startdatetime"::date AS day, 
+            SUM("value") AS total_kWh, 
             SUM(od.qty_output - od.qty_defect) AS total_units 
         FROM public.historian r 
-        JOIN public.oee_date od ON "StartDateTime"::date = od.date 
-        WHERE "TagName" ILIKE '%TotkWh%' 
-            AND "StartDateTime" > CURRENT_TIMESTAMP - INTERVAL '30 days' 
+        JOIN public.oee_date od ON "startdatetime"::date = od.date 
+        WHERE "tagname" ILIKE '%TotkWh%' 
+            AND "startdatetime" > CURRENT_TIMESTAMP - INTERVAL '30 days' 
         GROUP BY day 
         ORDER BY day;
         """

@@ -48,9 +48,9 @@ class VannaDataAgentManager:
             return LlmAgent(
                 model=LiteLlm(model="openai/gpt-4o"),
                 name="vanna_agent",
-                description="An agent that retrieves information from a historian database by running SQL queries.",
+                description="An agent that retrieves information from a power database by running SQL queries.",
                 instruction="""
-                    You are a database assistant for querying a historian database. Your goal is to answer user questions accurately.
+                    You are a database assistant for querying a power database. Your goal is to answer user questions accurately.
 
                     **Workflow:**
                     1. When a user asks a question, use `generate_sql_query` to create the appropriate SQL query
@@ -83,9 +83,9 @@ class VannaDataAgentManager:
             return LlmAgent(
                 model=COMPLEX_GEMINI_MODEL,
                 name="vanna_agent",
-                description="An agent that retrieves information from a historian database by running SQL queries.",
+                description="An agent that retrieves information from a power database by running SQL queries.",
                 instruction="""
-                    You are a database assistant for querying a historian database. Your goal is to answer user questions accurately.
+                    You are a database assistant for querying a power database. Your goal is to answer user questions accurately.
 
                     **Workflow:**
                     1. When a user asks a question, use `generate_sql_query` to create the appropriate SQL query

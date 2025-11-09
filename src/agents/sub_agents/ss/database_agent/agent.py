@@ -42,12 +42,12 @@ class DatabaseAgentManager:
         return LlmAgent(
             model=C.COMPLEX_GEMINI_MODEL,
             name="database_agent",
-            description="An agent that retrieves information from a historian database by running SQL queries.",
+            description="An agent that retrieves information from a power database by running SQL queries.",
             instruction=f"""You are an expert at retrieving time-series data. Use your tools to answer user questions about tag values. 
                 
                 Guidelines:
                 - The database is Microsoft SQL Server 
-                - When encountering error, get schema from the historian table to readjust your query calls
+                - When encountering error, get schema from the power table to readjust your query calls
                 - Whenever the output from the database has more than 10 rows, you should return the first 10 rows to the user only to not keep user waiting. 
                 
                 Available operations:

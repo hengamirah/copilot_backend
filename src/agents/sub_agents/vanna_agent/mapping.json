@@ -1,0 +1,113 @@
+{
+  "equipment_mapping": {
+    "skim_milk": {
+      "keywords": ["skim milk", "skim", "skimmed milk"],
+      "tagnames": [
+        "Cluster1.Raw_SkimMilkOutPump_PM800%",
+        "Cluster1.Raw_SkimMilkChiller_ON"
+      ],
+      "description": "Skim milk processing equipment including pump and chiller"
+    },
+    "full_milk": {
+      "keywords": ["full milk", "whole milk", "full fat milk"],
+      "tagnames": [
+        "Cluster1.Raw_FullMilkOutPump_PM800%",
+        "Cluster1.Raw_FullMilkChiller_ON"
+      ],
+      "description": "Full milk processing equipment including pump and chiller"
+    },
+    "mixer": {
+      "keywords": ["mixer", "mixing", "blend", "agitator"],
+      "tagnames": [
+        "Cluster1.Mixer_RawMilk_PM800%",
+        "Cluster1.Mixer_Mixer_PM800%",
+        "Cluster1.Mixer_Agitator_%"
+      ],
+      "description": "Mixing equipment for raw milk and ingredients"
+    },
+    "pasteurizer": {
+      "keywords": ["pasteurizer", "pasteurization", "heat treatment", "PLT"],
+      "tagnames": [
+        "Cluster1.PLT_LINE1_PM800%",
+        "Cluster1.PLT_LINE2_PM800%"
+      ],
+      "description": "Pasteurization units for Line 1 and Line 2"
+    },
+    "bottler": {
+      "keywords": ["bottler", "filler", "filling", "bottle"],
+      "tagnames": [
+        "Cluster1.Bottler_Filler_PM800%",
+        "Cluster1.Bottler_Label_PM800%",
+        "Cluster1.Bottler_Cap_PM800%"
+      ],
+      "description": "Bottling line equipment including filler, labeler, and capper"
+    },
+    "conveyor": {
+      "keywords": ["conveyor", "transport", "belt"],
+      "tagnames": [
+        "Cluster1.Bottler_Conveyor_PM800%",
+        "Cluster1.Bottler_CapConveyor_PM800%"
+      ],
+      "description": "Conveyor systems for bottle and cap transport"
+    },
+    "tank": {
+      "keywords": ["tank", "storage", "vessel"],
+      "tagnames": [
+        "Cluster1.Bottler_Tank1_Agitator_PM800%",
+        "Cluster1.Bottler_Tank2_Agitator_PM800%",
+        "Cluster1.Bottler_Tank1_OutletValve",
+        "Cluster1.Bottler_Tank2_OutletValve"
+      ],
+      "description": "Storage tanks with agitators and outlet valves"
+    },
+    "ingredients": {
+      "keywords": ["sugar", "malt", "straw", "feed", "ingredient"],
+      "tagnames": [
+        "Cluster1.Mixer_SugarFeed_ON",
+        "Cluster1.Mixer_MaltFeed_ON",
+        "Cluster1.Mixer_StrawFeed_ON"
+      ],
+      "description": "Ingredient feeding systems"
+    },
+    "building": {
+      "keywords": ["building", "facility", "BLD"],
+      "tagnames": [
+        "Cluster1.BLD_PM800%",
+        "Cluster1.BLD_LVL1_%",
+        "Cluster1.BLD_LVL2_%"
+      ],
+      "description": "Building electrical loads and levels"
+    },
+    "cip": {
+      "keywords": ["CIP", "cleaning", "wash", "sanitize"],
+      "tagnames": [
+        "Cluster1.CIP1_State"
+      ],
+      "description": "Clean-in-place system for Line 1"
+    },
+    "system": {
+      "keywords": ["system", "server", "historian", "performance"],
+      "tagnames": [
+        "SysPerfCPUTotal",
+        "SysReplicationValuesPerSecTotal",
+        "SysPerfSQLServerCPU"
+      ],
+      "description": "System performance and historian metrics"
+    },
+    "energy": {
+      "keywords": ["energy", "tariff", "cost", "electricity"],
+      "tagnames": [
+        "Cluster1.Tariff"
+      ],
+      "description": "Energy tariff and cost monitoring"
+    },
+    "production": {
+      "keywords": ["production", "speed", "entry", "accumulator"],
+      "tagnames": [
+        "Cluster1.EntrySpeed",
+        "Cluster1.EntryAccumulatorLength"
+      ],
+      "description": "Production line speed and accumulator sensors"
+    }
+  }
+}

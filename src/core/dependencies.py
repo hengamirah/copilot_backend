@@ -45,7 +45,7 @@ visualizationAgentManager = VisualizationAgentManager(visualization_tool=visuali
 dataAgent = CustomVanna({"path":CHROMA_PATH})
 
 # dataAgent.connect_to_mssql(
-#     odbc_conn_str='DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost,54180;DATABASE=historian;UID=n8n;PWD=password'
+#     odbc_conn_str='DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost,54180;DATABASE=power;UID=n8n;PWD=password'
 # )
 
 dataAgent.connect_to_postgres(
