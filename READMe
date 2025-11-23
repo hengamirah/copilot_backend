@@ -1,118 +1,135 @@
 # Data Agent
+## Project overview
+This repository contains the Data Agent — a Python project that provides ingestion, storage and simple analytics for time-series and historian-style data. It includes:
 
-## Project Overview
+- training utilities (under `src/agents/sub_agents/vanna_agent`)
+- data storage helpers (Chroma vector store snapshots under `chroma_path/`)
+- example SQL DML files to seed tables (e.g., `equipment_dml.sql`, `event_dml.sql`, `oee_date_dml.sql`)
+- local HTML charts in `local_charts/` for quick visualization
 
-This repository contains a data agent project, designed for processing and analyzing data, potentially related to energy consumption. While a detailed description was not provided, the structure and files suggest capabilities for data extraction, analysis, and visualization.
+## 00 Prerequisites
 
-## Key Features & Benefits
+- Python 3.10+ (3.11 recommended)
+- pip
+- PostgreSQL (if you want persistent session storage or to run the historian queries)
 
-*   **Data Processing:** Handles binary data files (e.g., `data_level0.bin`, `header.bin`, `length.bin`, `link_lists.bin`).
-*   **Data Storage:** Utilizes `chroma.sqlite3` for persistent data storage, likely leveraging a vector database.
-*   **Data Analysis:** Implements data analysis functionalities using Python.
-*   **Data Visualization:** Generates HTML-based charts for visualizing data insights (see `local_charts/`).
+Install runtime dependencies into your project environment (virtualenv / venv / conda):
+```powershell
+    # Example (Windows PowerShell)
+    'python -m venv .venv'
+    '.\.venv\Scripts\Activate.ps1'
+    'python -m pip install --upgrade pip'
+    'pip install -r requirements.txt'
+```
 
-## Prerequisites & Dependencies
+**If you use conda**
+```powershell
+'conda activate cti'
+'pip install -r requirements.txt'
+```
 
-Before setting up the project, ensure you have the following installed:
+## 01 Database: example artifacts table
 
-*   **Python:** Version 3.10 or higher.
-*   **pip:** Python package installer.
+**Run this in Postgres to create the artifacts table used by some services:**
+```sql
+CREATE TABLE artifacts_table (
+    id SERIAL PRIMARY KEY,
+    path VARCHAR(1024) NOT NULL,
+    version INTEGER NOT NULL,
+    mime_type VARCHAR(255) NOT NULL,
+    data BYTEA NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(path, version)
+);
 
-The project likely depends on several Python libraries, which can be installed after cloning the repository. A `pyproject.toml` file is provided, which often implies the use of `poetry` or a similar dependency management tool. Key dependencies may include (but are not limited to):
+CREATE INDEX idx_artifacts_path ON artifacts_table(path);
+CREATE INDEX idx_artifacts_path_prefix ON artifacts_table(path text_pattern_ops);
+```
+**For Power data, create a database named "Power", and then create table with columns as follows**
+```sql
+CREATE TABLE power (
+    sites VARCHAR(50),
+    datetimegenerated TIMESTAMPTZ,
+    tagname VARCHAR(100),
+    value DOUBLE PRECISION,
+    datatype VARCHAR(20),
+    address TEXT
+);
+```
 
-*   `chromadb`
-*   `pandas`
-*   `matplotlib` or `plotly`
-*   `vanna`
-*   Other libraries used for data processing, numerical computation, and visualization.
+and then import "power_v2.csv" file in the power table.
 
-* **env** To be created inside src/core 
- 
-## Installation & Setup Instructions
+## 02 Environment configuration (in `.env.development` file)
 
-1.  **Clone the Repository:**
+This project reads environment variables from `src/core/.env.development` (see `src/core/config.py`). 
+Essential variables (minimum to run training and the web dev server):
 
-    ```bash
-    git clone https://github.com/limwei97/data_agent.git
-    cd data_agent
-    ```
+**Which LLM provider: 'gemini' or 'openai'**
+LLM_PROVIDER=gemini
 
-2.  **Install Dependencies:**
+**Gemini (Google) configuration**
+GEMINI_API_KEY=your_gemini_api_key_here
+COMPLEX_GEMINI_MODEL=gemini-2.5-flash
+SIMPLE_GEMINI_MODEL=gemini-1.5-flash
 
-    If a `requirements.txt` file is present, use:
+**OpenAI configuration (if using OpenAI instead)**
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4o-mini
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+**Chroma local path (used by Vanna agent)**
+CHROMA_PATH=C:\Users\Amirah\OneDrive\002 CTI\GenAIProject\Vanna_agent\data_agent\src\agents\sub_agents\vanna_agent\chroma_path
 
-    If using `poetry` (check `pyproject.toml` for `poetry` configuration):
+**Postgres connection for persistent session/storage (example)**
+HOST=localhost
+PORT=5432
+DBNAME=historian
+USER=postgres
+PASSWORD=your_db_password
 
-    ```bash
-    poetry install
-    ```
 
-    If using `uv`:
+## 03 Common runtime commands
 
-    ```bash
-    uv sync
-    ```
+**Run the training script for power data (from repo root) at terminal:**
 
-    If not using a dependency manager and no `requirements.txt` is provided, install libraries manually as you encounter `ImportError`s during runtime, referring to the import statements in the Python files to identify which libraries are needed.
+```python
+ 'python -m src.agents.sub_agents.vanna_agent.training_power'
+```
 
-    - run this in postgres 
+-  To Start the dev web server (ADK) for testing the Data Agent:
+**Run the Data Agent for development testing**:
+```powershell
+adk web
+# or with persistent session storage (Postgres URI)
+adk web --session_service_uri="postgresql://<user>:<pass>@<host>:5432/<db>"
+```
 
-    -- Create the artifacts table
-        ```sql
-        CREATE TABLE artifacts_table (
-            id SERIAL PRIMARY KEY,
-            path VARCHAR(1024) NOT NULL,
-            version INTEGER NOT NULL,
-            mime_type VARCHAR(255) NOT NULL,
-            data BYTEA NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            
-            -- Ensure unique path + version combinations
-            UNIQUE(path, version)
-        );
+**Run agent as backend for production to run with front end**
 
-        -- Index for fast lookups by path
-        CREATE INDEX idx_artifacts_path ON artifacts_table(path);
+    Update  in the src/core/config.py file 
+    Run  at root directory
+```python 
+     `python -m src.backend.ag_ui.main` 
+```
 
-        -- Index for listing artifacts with prefix matching
-        CREATE INDEX idx_artifacts_path_prefix ON artifacts_table(path text_pattern_ops);
-        ```
+## Dependency notes
 
-3.  **Environment Setup (if applicable):**
+- If you hit `ModuleNotFoundError` (e.g. `asyncpg`), install it into the environment used to run the code and add it to `requirements.txt`:
 
-    *   If the project relies on any environment variables, set them accordingly (refer to any documentation or configuration files) as per .env.development
+```powershell
+pip install asyncpg
+```
 
-4. **Train Vanna AI**:
-    Run `python -m src.agents.sub_agents.vanna_agent.training` at root directory
-    Alternatively, run the training.ipynb
+- If you see a pydantic/pydantic-core mismatch, align versions in your environment. Example:
 
-5. **Run the Data Agent for development**:
+```powershell
+pip install "pydantic-core==2.41.5" "pydantic>=2,<3"
+```
 
-   Run `adk web` at the root directory
-   Run `adk web --session_service_uri="postgresql://<postgres_username>:<username_password>@<ip_address>:5432/<database_name>"` at root directory for persistent session data
-   Instructions will depend on the specific application that uses the data agent. Inspect the source code within the `src/` directory to understand how to execute the main application.
+---
 
-6. **Run agent as backend for production**
-    Update `load_dotenv(r'C:\Users\Lim Fang Wei\Downloads\personal\data_agent\src\core\.env')` in the src/core/config.py file
-    Run `python -m src.backend.ag_ui.main` at root directory
+## Quick troubleshooting
 
-## Usage Examples & API Documentation
+- If `CHROMA_PATH` or `COMPLEX_GEMINI_MODEL` appears as `None` at runtime, confirm `src/core/.env.development` exists and that your process is running from the repo root so `load_dotenv(r"src/core/.env.development")` resolves correctly.
+- Restart your Python process or kernel after changing environment variables.
 
-To view the generated charts, simply open the HTML files in a web browser (e.g., `local_charts/average_energy_consumption_comparison.html`).
-
-## Configuration Options
-
-Configuration options depend on the specific functionalities implemented within the source code. Examine the Python scripts (`src/`) for any configurable parameters or settings.
-The `app.log` file suggests the use of logging; configuration for logging may be available.
-
-## License Information
-
-License information is not specified. Further investigation may be required to determine the appropriate licensing terms.
-
-## Acknowledgments
-
-N/A
+---

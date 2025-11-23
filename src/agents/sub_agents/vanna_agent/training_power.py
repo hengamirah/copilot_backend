@@ -1,9 +1,35 @@
 # %%
-COMPLEX_GEMINI_MODEL="gemini-2.5-flash"
-API_KEY="xxx"
-
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.google import GoogleGeminiChat
+import os
+from dotenv import load_dotenv
+# Load environment variables from the .env file
+load_dotenv(r'src\core\.env.development')
+from src.core.config import (
+    GEMINI_API_KEY,
+    COMPLEX_GEMINI_MODEL,
+    CHROMA_PATH,
+    HOST,
+    PORT,
+    DBNAME,
+    USER,
+    PASSWORD,
+)
+# # Access the variables
+# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# COMPLEX_GEMINI_MODEL = os.getenv("COMPLEX_GEMINI_MODEL")
+# SIMPLE_GEMINI_MODEL = os.getenv("SIMPLE_GEMINI_MODEL")
+# APP_NAME = os.getenv("APP_NAME")
+# MSSQL = os.getenv("MSSQL")
+# CHROMA_PATH = os.getenv("CHROMA_PATH")
+# HOST = os.getenv("HOST")
+# PORT = os.getenv("PORT")
+# DBNAME = os.getenv("DBNAME")
+# USER = os.getenv("USER")
+# PASSWORD = os.getenv("PASSWORD")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+
 
 class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
     
@@ -15,24 +41,24 @@ class CustomVanna(ChromaDB_VectorStore, GoogleGeminiChat):
         GoogleGeminiChat.__init__(
             self, 
             config={
-                'api_key': API_KEY, 
+                'api_key': GEMINI_API_KEY, 
                 'model_name': COMPLEX_GEMINI_MODEL
             }
         )
 
+# Ensure CHROMA_PATH exists
+import os
+os.makedirs(CHROMA_PATH, exist_ok=True)
+# Initialize Vanna instance globally using CHROMA_PATH from env
+dataAgent = CustomVanna({"path": CHROMA_PATH})
 
-# Initialize Vanna instance globally
-dataAgent = CustomVanna({"path":r"C:\Users\Lim Fang Wei\Downloads\personal\data_agent\chroma_path_power"})
-# dataAgent.connect_to_mssql(
-#     odbc_conn_str='DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost,54180;DATABASE=power;UID=n8n;PWD=password'
-# )
-
+# Connect to Postgres using env values
 dataAgent.connect_to_postgres(
-    host="localhost",
-    dbname="power",
-    user="postgres",
-    password="password",
-    port=5432,
+    host=HOST,
+    dbname=DBNAME,
+    user=USER,
+    password=PASSWORD,
+    port=int(PORT) if PORT else 5432,
 )
 
 # %%
@@ -730,7 +756,9 @@ dataAgent.train(
 
 # %%
 # Read markdown file into string
-with open('context_v2_power.md', 'r', encoding='utf-8') as f:
+
+context_v2_power_md = r'src\agents\sub_agents\vanna_agent\context_v2_power.md'
+with open(context_v2_power_md, 'r', encoding='utf-8') as f:
     md_content = f.read()
 
 print(md_content)
