@@ -125,11 +125,10 @@ pip install asyncpg
 pip install "pydantic-core==2.41.5" "pydantic>=2,<3"
 ```
 
----
+
 
 ## Quick troubleshooting
 
 - If `CHROMA_PATH` or `COMPLEX_GEMINI_MODEL` appears as `None` at runtime, confirm `src/core/.env.development` exists and that your process is running from the repo root so `load_dotenv(r"src/core/.env.development")` resolves correctly.
 - Restart your Python process or kernel after changing environment variables.
 
----
