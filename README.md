@@ -63,7 +63,7 @@ and then import "power_v2.csv" file in the power table.
 
 This project reads environment variables from `src/core/.env.development` (see `src/core/config.py`). 
 Essential variables (minimum to run training and the web dev server):
-
+```
 **Which LLM provider: 'gemini' or 'openai'**
 LLM_PROVIDER=gemini
 
@@ -85,7 +85,7 @@ PORT=5432
 DBNAME=historian
 USER=postgres
 PASSWORD=your_db_password
-
+```
 
 ## 03 Common runtime commands
 
@@ -105,8 +105,8 @@ adk web --session_service_uri="postgresql://<user>:<pass>@<host>:5432/<db>"
 
 **Run agent as backend for production to run with front end**
 
-    Update  in the src/core/config.py file 
-    Run  at root directory
+Update  in the src/core/config.py file 
+Run  at root directory
 ```python 
      `python -m src.backend.ag_ui.main` 
 ```
